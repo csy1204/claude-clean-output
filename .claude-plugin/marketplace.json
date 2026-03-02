@@ -1,0 +1,16 @@
+{
+  "name": "claude-clean-output",
+  "description": "Fix broken tables and diagrams in Claude Code output",
+  "owner": {
+    "name": "",
+    "email": ""
+  },
+  "plugins": [
+    {
+      "name": "claude-clean-output",
+      "description": "Auto-formats broken markdown tables and ASCII diagrams. CJK display width aware.",
+      "version": "0.1.0",
+      "source": "./"
+    }
+  ]
+}
