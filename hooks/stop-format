@@ -1,0 +1,52 @@
+#!/bin/bash
+# Stop hook: extract and format tables/diagrams from the last Claude response.
+# Saves cleaned output to ~/.claude/clean-output/latest.md
+# Copies to clipboard if available.
+
+set -euo pipefail
+
+# Read hook input from stdin
+HOOK_INPUT=$(cat)
+
+# Get transcript path from environment or hook input
+TRANSCRIPT_PATH="${TRANSCRIPT_PATH:-}"
+if [[ -z "$TRANSCRIPT_PATH" ]]; then
+  # Try to extract from hook input JSON
+  if command -v jq &>/dev/null; then
+    TRANSCRIPT_PATH=$(echo "$HOOK_INPUT" | jq -r '.transcript_path // empty' 2>/dev/null || true)
+  fi
+fi
+
+if [[ -z "$TRANSCRIPT_PATH" || ! -f "$TRANSCRIPT_PATH" ]]; then
+  # No transcript available — exit silently
+  exit 0
+fi
+
+PLUGIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+LIB_DIR="$PLUGIN_DIR/lib"
+OUTPUT_DIR="$HOME/.claude/clean-output"
+
+# Run extractor
+result=$(python3 "$LIB_DIR/extract.py" "$TRANSCRIPT_PATH" 2>/dev/null || true)
+
+if [[ -z "$result" ]]; then
+  # Nothing to format
+  exit 0
+fi
+
+# Save to file
+mkdir -p "$OUTPUT_DIR"
+echo "$result" > "$OUTPUT_DIR/latest.md"
+
+# Copy to clipboard (best effort)
+if command -v pbcopy &>/dev/null; then
+  echo "$result" | pbcopy
+elif command -v xclip &>/dev/null; then
+  echo "$result" | xclip -selection clipboard
+elif command -v xsel &>/dev/null; then
+  echo "$result" | xsel --clipboard --input
+fi
+
+# Return empty JSON to allow stop (don't block)
+echo '{}'
+exit 0
