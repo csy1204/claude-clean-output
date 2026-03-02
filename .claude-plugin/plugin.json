@@ -6,8 +6,8 @@
     "name": "",
     "email": ""
   },
-  "homepage": "https://github.com/user/claude-clean-output",
-  "repository": "https://github.com/user/claude-clean-output",
+  "homepage": "https://github.com/csy1204/claude-clean-output",
+  "repository": "https://github.com/csy1204/claude-clean-output",
   "license": "MIT",
   "keywords": ["formatting", "tables", "diagrams", "cjk", "clipboard", "output", "prompt-rules", "config"]
 }
