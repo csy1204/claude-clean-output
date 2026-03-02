@@ -1,7 +1,7 @@
 {
   "name": "claude-clean-output",
-  "version": "0.1.0",
-  "description": "Auto-formats broken markdown tables and ASCII diagrams in Claude Code output. CJK display width aware. Stop hook for auto-formatting + /format command for manual control.",
+  "version": "0.2.0",
+  "description": "Auto-formats broken markdown tables and ASCII diagrams in Claude Code output. CJK display width aware. Prompt rules + Stop hook auto-formatting + /format, /setup, /configure commands.",
   "author": {
     "name": "",
     "email": ""
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/user/claude-clean-output",
   "repository": "https://github.com/user/claude-clean-output",
   "license": "MIT",
-  "keywords": ["formatting", "tables", "diagrams", "cjk", "clipboard", "output"]
+  "keywords": ["formatting", "tables", "diagrams", "cjk", "clipboard", "output", "prompt-rules", "config"]
 }
