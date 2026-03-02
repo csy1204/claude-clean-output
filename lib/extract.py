@@ -3,7 +3,8 @@
 
 Usage:
   python3 extract.py <transcript.jsonl>
-  python3 extract.py <transcript.jsonl> --json   # output as JSON array
+  python3 extract.py <transcript.jsonl> --json              # output as JSON array
+  python3 extract.py <transcript.jsonl> --normalize-chars   # convert ASCII box chars to unicode
 """
 import json
 import sys
@@ -78,11 +79,12 @@ def extract_diagrams(text):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: extract.py <transcript.jsonl> [--json]", file=sys.stderr)
+        print("Usage: extract.py <transcript.jsonl> [--json] [--normalize-chars]", file=sys.stderr)
         sys.exit(1)
 
     transcript_path = sys.argv[1]
     as_json = '--json' in sys.argv
+    do_normalize = '--normalize-chars' in sys.argv
 
     text = get_last_assistant_text(transcript_path)
     if not text:
@@ -101,7 +103,7 @@ def main():
         results.append({'type': 'table', 'formatted': formatted})
 
     for diagram in diagrams:
-        formatted = format_diagram(diagram)
+        formatted = format_diagram(diagram, do_normalize_chars=do_normalize)
         results.append({'type': 'diagram', 'formatted': formatted})
 
     if as_json:

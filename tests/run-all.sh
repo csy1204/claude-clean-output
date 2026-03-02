@@ -20,6 +20,7 @@ run_suite "Display Width" "$SCRIPT_DIR/test-display-width.sh"
 run_suite "Format Table" "$SCRIPT_DIR/test-format-table.sh"
 run_suite "Format Diagram" "$SCRIPT_DIR/test-format-diagram.sh"
 run_suite "Extract" "$SCRIPT_DIR/test-extract.sh"
+run_suite "Config" "$SCRIPT_DIR/test-config.sh"
 
 echo "========================="
 if [[ $TOTAL_FAIL -eq 0 ]]; then

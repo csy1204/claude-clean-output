@@ -53,4 +53,14 @@ python3 "${CLAUDE_PLUGIN_ROOT}/lib/extract.py" "$TRANSCRIPT_PATH" | xclip -selec
 
 ## 파일 저장
 
-결과는 항상 `~/.claude/clean-output/latest.md`에도 저장됩니다.
+결과는 항상 `~/.claude/clean-output/latest.md`에도 저장됩니다 (설정에서 변경 가능).
+
+## 설정
+
+동작을 변경하려면 `/configure` 커맨드를 사용하세요.
+설정 파일: `~/.claude/plugins/claude-clean-output/config.json`
+
+수동 설정 확인:
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/lib/config.py" --dump
+```

@@ -24,10 +24,25 @@ fi
 
 PLUGIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 LIB_DIR="$PLUGIN_DIR/lib"
-OUTPUT_DIR="$HOME/.claude/clean-output"
+
+# Read config values
+AUTO_FORMAT=$(python3 "$LIB_DIR/config.py" --get autoFormat 2>/dev/null || echo "true")
+CLIPBOARD=$(python3 "$LIB_DIR/config.py" --get clipboard 2>/dev/null || echo "true")
+UNICODE_DIAGRAMS=$(python3 "$LIB_DIR/config.py" --get unicodeDiagrams 2>/dev/null || echo "false")
+SAVE_PATH=$(python3 "$LIB_DIR/config.py" --get savePath 2>/dev/null || echo "$HOME/.claude/clean-output/latest.md")
+
+# Skip if auto-format disabled
+if [[ "$AUTO_FORMAT" == "false" ]]; then
+  echo '{}'
+  exit 0
+fi
 
 # Run extractor
-result=$(python3 "$LIB_DIR/extract.py" "$TRANSCRIPT_PATH" 2>/dev/null || true)
+EXTRA_ARGS=""
+if [[ "$UNICODE_DIAGRAMS" == "true" ]]; then
+  EXTRA_ARGS="--normalize-chars"
+fi
+result=$(python3 "$LIB_DIR/extract.py" "$TRANSCRIPT_PATH" $EXTRA_ARGS 2>/dev/null || true)
 
 if [[ -z "$result" ]]; then
   # Nothing to format
@@ -35,16 +50,20 @@ if [[ -z "$result" ]]; then
 fi
 
 # Save to file
-mkdir -p "$OUTPUT_DIR"
-echo "$result" > "$OUTPUT_DIR/latest.md"
+SAVE_DIR=$(dirname "${SAVE_PATH/#\~/$HOME}")
+SAVE_FILE="${SAVE_PATH/#\~/$HOME}"
+mkdir -p "$SAVE_DIR"
+echo "$result" > "$SAVE_FILE"
 
 # Copy to clipboard (best effort)
-if command -v pbcopy &>/dev/null; then
-  echo "$result" | pbcopy
-elif command -v xclip &>/dev/null; then
-  echo "$result" | xclip -selection clipboard
-elif command -v xsel &>/dev/null; then
-  echo "$result" | xsel --clipboard --input
+if [[ "$CLIPBOARD" == "true" ]]; then
+  if command -v pbcopy &>/dev/null; then
+    echo "$result" | pbcopy
+  elif command -v xclip &>/dev/null; then
+    echo "$result" | xclip -selection clipboard
+  elif command -v xsel &>/dev/null; then
+    echo "$result" | xsel --clipboard --input
+  fi
 fi
 
 # Return empty JSON to allow stop (don't block)
