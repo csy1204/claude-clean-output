@@ -1,0 +1,2 @@
+{"type":"summary","summary":"Session started"}
+{"type":"assistant","message":{"content":[{"type":"text","text":"Here is a table:\n\n| Name | Description | Status |\n|---|---|---|\n| foo | long desc here | active |\n| bar | short | inactive |\n\nAnd a diagram:\n\n```\n    ┌──────┐\n    │ Test │\n    └──────┘\n```\n\nDone!"}]}}
